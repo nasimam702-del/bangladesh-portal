@@ -106,7 +106,7 @@ def index():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
-    return render_template("index.html", services=format_services(), emergency=emergency_numbers, user=user)
+    return render_template("index.html", services=list(services.values()), emergency=emergency_numbers, user=user)
 
 @app.route("/search")
 def search():
