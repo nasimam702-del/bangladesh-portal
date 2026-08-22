@@ -14,8 +14,8 @@
         .logo-area { display: flex; align-items: center; gap: 14px; }
         .logo-text h1 { font-size: 1.2rem; font-weight: 700; }
         .right-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .lang-btn { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; font-family: 'Hind Siliguri', Arial, sans-serif; cursor: pointer; font-weight: 700; transition: all 0.2s; }
-        .lang-btn:hover { background: rgba(255,255,255,0.35); }
+        .lang-btn { background: white; color: var(--green); border: none; border-radius: 20px; padding: 7px 16px; font-size: 0.85rem; font-family: 'Hind Siliguri', Arial, sans-serif; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+        .lang-btn:hover { background: var(--gold); color: var(--dark); }
         .user-area { display: flex; align-items: center; gap: 8px; }
         .user-area span { font-size: 0.9rem; }
         .user-area a { color: white; padding: 7px 14px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 700; }
@@ -84,7 +84,9 @@
 <div class="emergency-strip">
     <span class="label" id="emergency-label">🆘 জরুরি নম্বর:</span>
     {% for em in emergency %}
-    <a href="tel:{{ em.number }}" class="em-item">{{ em.name_bn }}: <strong>{{ em.number }}</strong></a>
+    <a href="tel:{{ em.number }}" class="em-item">
+        <span class="em-name" data-bn="{{ em.name_bn }}" data-en="{{ em.name_en }}">{{ em.name_bn }}</span>: <strong>{{ em.number }}</strong>
+    </a>
     {% endfor %}
 </div>
 
@@ -94,11 +96,11 @@
         <div class="results-grid" id="results-grid"></div>
     </div>
     <div id="categories-container">
-        {% for category, items in services.items() %}
+        {% for category in services %}
         <div class="category-section">
             <div class="category-title" data-bn="{{ category.bn }}" data-en="{{ category.en }}">{{ category.bn }}</div>
             <div class="services-grid">
-                {% for service in items %}
+                {% for service in category.items %}
                 <a href="{{ service.link }}" target="_blank" class="service-card">
                     <div class="icon">{{ service.icon }}</div>
                     <h3 data-bn="{{ service.name_bn }}" data-en="{{ service.name_en }}">{{ service.name_bn }}</h3>
@@ -121,57 +123,46 @@
 <script>
     let isEnglish = false;
 
-    const translations = {
-        bn: {
-            siteTitle: "বাংলাদেশ সেবা পোর্টাল",
-            langBtn: "🌐 English",
-            login: "লগইন",
-            register: "রেজিস্টার",
-            logout: "লগআউট",
-            searchPlaceholder: "সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID...",
-            searchBtn: "🔍 খুঁজুন",
-            emergencyLabel: "🆘 জরুরি নম্বর:",
-            searchTitle: "🔍 অনুসন্ধানের ফলাফল",
-            noResult: "কোনো ফলাফল পাওয়া যায়নি।",
-            footer: "তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য"
-        },
-        en: {
-            siteTitle: "Bangladesh Service Portal",
-            langBtn: "🌐 বাংলা",
-            login: "Login",
-            register: "Register",
-            logout: "Logout",
-            searchPlaceholder: "Search services... eg: Passport, Train, NID...",
-            searchBtn: "🔍 Search",
-            emergencyLabel: "🆘 Emergency Numbers:",
-            searchTitle: "🔍 Search Results",
-            noResult: "No results found.",
-            footer: "Made for the people of 🇧🇩 Bangladesh"
-        }
-    };
-
     function toggleLang() {
         isEnglish = !isEnglish;
-        const lang = isEnglish ? 'en' : 'bn';
-        const t = translations[lang];
 
-        document.getElementById('site-title').textContent = t.siteTitle;
-        document.getElementById('lang-btn').textContent = t.langBtn;
-        document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-        document.getElementById('search-btn').textContent = t.searchBtn;
-        document.getElementById('emergency-label').textContent = t.emergencyLabel;
-        document.getElementById('search-title').textContent = t.searchTitle;
-        document.getElementById('footer-text').textContent = t.footer;
+        // সাইট title
+        document.getElementById('site-title').textContent = isEnglish ? 'Bangladesh Service Portal' : 'বাংলাদেশ সেবা পোর্টাল';
 
+        // Language button
+        document.getElementById('lang-btn').textContent = isEnglish ? '🌐 বাংলা' : '🌐 English';
+
+        // Search
+        document.getElementById('searchInput').placeholder = isEnglish ? 'Search services... eg: Passport, Train, NID...' : 'সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID...';
+        document.getElementById('search-btn').textContent = isEnglish ? '🔍 Search' : '🔍 খুঁজুন';
+
+        // Emergency
+        document.getElementById('emergency-label').textContent = isEnglish ? '🆘 Emergency Numbers:' : '🆘 জরুরি নম্বর:';
+
+        // Search results title
+        document.getElementById('search-title').textContent = isEnglish ? '🔍 Search Results' : '🔍 অনুসন্ধানের ফলাফল';
+
+        // Footer
+        document.getElementById('footer-text').textContent = isEnglish ? 'Made for the people of 🇧🇩 Bangladesh' : 'তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য';
+
+        // Login/Register/Logout buttons
         const btnLogin = document.getElementById('btn-login');
         const btnRegister = document.getElementById('btn-register');
         const btnLogout = document.getElementById('btn-logout');
-        if (btnLogin) btnLogin.textContent = t.login;
-        if (btnRegister) btnRegister.textContent = t.register;
-        if (btnLogout) btnLogout.textContent = t.logout;
+        if (btnLogin) btnLogin.textContent = isEnglish ? 'Login' : 'লগইন';
+        if (btnRegister) btnRegister.textContent = isEnglish ? 'Register' : 'রেজিস্টার';
+        if (btnLogout) btnLogout.textContent = isEnglish ? 'Logout' : 'লগআউট';
 
+        // Emergency names
+        document.querySelectorAll('.em-name').forEach(el => {
+            el.textContent = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-bn');
+        });
+
+        // সব data-bn/data-en elements
         document.querySelectorAll('[data-bn][data-en]').forEach(el => {
-            el.textContent = el.getAttribute('data-' + lang);
+            if (!el.classList.contains('em-name')) {
+                el.textContent = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-bn');
+            }
         });
     }
 
@@ -184,28 +175,30 @@
         const resultsDiv = document.getElementById('search-results');
         const grid = document.getElementById('results-grid');
         const categoriesDiv = document.getElementById('categories-container');
-        const t = translations[isEnglish ? 'en' : 'bn'];
+
         if (q.length < 1) {
             resultsDiv.style.display = 'none';
             categoriesDiv.style.display = 'block';
             return;
         }
-        const res = await fetch('/search?q=' + encodeURIComponent(q) + '&lang=' + (isEnglish ? 'en' : 'bn'));
+
+        const res = await fetch('/search?q=' + encodeURIComponent(q));
         const data = await res.json();
         categoriesDiv.style.display = 'none';
         resultsDiv.style.display = 'block';
+
         if (data.length === 0) {
-            grid.innerHTML = '<p style="color:#888">' + t.noResult + '</p>';
+            grid.innerHTML = '<p style="color:#888">' + (isEnglish ? 'No results found.' : 'কোনো ফলাফল পাওয়া যায়নি।') + '</p>';
             return;
         }
-        const lang = isEnglish ? 'en' : 'bn';
+
         grid.innerHTML = data.map(s => `
             <a href="${s.link}" target="_blank" class="service-card">
                 <div class="icon">${s.icon}</div>
-                <h3>${lang === 'en' ? s.name_en : s.name_bn}</h3>
-                <p>${lang === 'en' ? s.desc_en : s.desc_bn}</p>
-                <span class="cat-badge">${lang === 'en' ? s.category_en : s.category_bn}</span>
-                <span class="arrow">${lang === 'en' ? 'Details →' : 'বিস্তারিত →'}</span>
+                <h3 data-bn="${s.name_bn}" data-en="${s.name_en}">${isEnglish ? s.name_en : s.name_bn}</h3>
+                <p data-bn="${s.desc_bn}" data-en="${s.desc_en}">${isEnglish ? s.desc_en : s.desc_bn}</p>
+                <span class="cat-badge" data-bn="${s.category_bn}" data-en="${s.category_en}">${isEnglish ? s.category_en : s.category_bn}</span>
+                <span class="arrow" data-bn="বিস্তারিত →" data-en="Details →">${isEnglish ? 'Details →' : 'বিস্তারিত →'}</span>
             </a>
         `).join('');
     }
