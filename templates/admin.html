@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f4f0; }
+        .topbar { background: #006A4E; color: white; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; }
+        .topbar h1 { font-size: 1.2rem; }
+        .topbar a { color: white; text-decoration: none; background: #F42A41; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: white; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .stat-card .num { font-size: 2.8rem; font-weight: 700; color: #006A4E; }
+        .stat-card p { color: #666; font-size: 0.9rem; margin-top: 6px; }
+        .table-wrap { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #006A4E; color: white; padding: 14px 16px; text-align: left; font-size: 0.9rem; }
+        td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 0.88rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f9fdf9; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
+        .badge-admin { background: #FFF3CD; color: #856404; }
+        .badge-user { background: #D1ECF1; color: #0C5460; }
+    </style>
+</head>
+<body>
+<div class="topbar">
+    <h1>Admin Panel - Bangladesh Seba Portal</h1>
+    <a href="/">Home</a>
+</div>
+<div class="container">
+    <div class="stats">
+        <div class="stat-card">
+            <div class="num">{{ total }}</div>
+            <p>Total Users</p>
+        </div>
+        <div class="stat-card">
+            <div class="num">{{ users | selectattr('is_admin') | list | length }}</div>
+            <p>Admins</p>
+        </div>
+        <div class="stat-card">
+            <div class="num">{{ users | rejectattr('is_admin') | list | length }}</div>
+            <p>Regular Users</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Registered</th>
+                    <th>Last Login</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                        {% if u.is_admin %}
+                        <span class="badge badge-admin">Admin</span>
+                        {% else %}
+                        <span class="badge badge-user">User</span>
+                        {% endif %}
+                    </td>
+                    <td>{% if u.created_at %}{{ u.created_at.strftime('%d-%m-%Y') }}{% else %}-{% endif %}</td>
+                    <td>{% if u.last_login %}{{ u.last_login.strftime('%d-%m-%Y %H:%M') }}{% else %}Never{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
