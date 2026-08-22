@@ -99,14 +99,7 @@ emergency_numbers = [
 ]
 
 def format_services():
-    result = []
-    for key, cat in services.items():
-        result.append({
-            "bn": cat["bn"],
-            "en": cat["en"],
-            "items": cat["items"]
-        })
-    return result
+    return list(services.values())
 
 @app.route("/")
 def index():
