@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলাদেশ সেবা পোর্টাল | Bangladesh Service Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --green: #006A4E; --red: #F42A41; --gold: #F5A623; --light: #F0F4F0; --dark: #1a2e1a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Hind Siliguri', Arial, sans-serif; background: var(--light); color: var(--dark); }
+        header { background: linear-gradient(135deg, var(--green) 60%, #004d38 100%); color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(0,0,0,0.18); }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; border-bottom: 2px solid rgba(255,255,255,0.12); flex-wrap: wrap; gap: 10px; }
+        .logo-area { display: flex; align-items: center; gap: 14px; }
+        .logo-text h1 { font-size: 1.2rem; font-weight: 700; }
+        .right-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .lang-btn { background: white; color: var(--green); border: none; border-radius: 20px; padding: 7px 16px; font-size: 0.85rem; font-family: 'Hind Siliguri', Arial, sans-serif; cursor: pointer; font-weight: 700; }
+        .lang-btn:hover { background: var(--gold); color: var(--dark); }
+        .user-area { display: flex; align-items: center; gap: 8px; }
+        .user-area span { font-size: 0.9rem; }
+        .user-area a { color: white; padding: 7px 14px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 700; }
+        .btn-login { background: rgba(255,255,255,0.2); }
+        .btn-register, .btn-logout { background: var(--red); }
+        .btn-admin { background: var(--gold); color: var(--dark) !important; }
+        .search-bar { padding: 12px 32px; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.15); }
+        .search-bar input { flex: 1; padding: 10px 18px; border-radius: 30px; border: none; font-size: 1rem; font-family: 'Hind Siliguri', Arial, sans-serif; outline: none; }
+        .search-bar button { padding: 10px 24px; background: var(--red); color: white; border: none; border-radius: 30px; font-size: 1rem; cursor: pointer; font-weight: 600; font-family: 'Hind Siliguri', Arial, sans-serif; white-space: nowrap; }
+        .emergency-strip { background: var(--red); color: white; padding: 8px 32px; display: flex; align-items: center; gap: 16px; overflow-x: auto; white-space: nowrap; }
+        .emergency-strip .label { font-weight: 700; font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 12px; flex-shrink: 0; }
+        .em-item { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; text-decoration: none; color: white; flex-shrink: 0; }
+        main { max-width: 1200px; margin: 0 auto; padding: 32px 20px; }
+        #search-results { display: none; margin-bottom: 28px; }
+        #search-results h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--green); }
+        .results-grid, .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+        .category-section { margin-bottom: 36px; }
+        .category-title { font-size: 1.1rem; font-weight: 700; color: var(--green); border-left: 5px solid var(--red); padding-left: 12px; margin-bottom: 16px; }
+        .service-card { background: white; border-radius: 14px; padding: 20px 16px; box-shadow: 0 4px 20px rgba(0,106,78,0.10); display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: var(--dark); border: 2px solid transparent; transition: all 0.22s ease; }
+        .service-card:hover { border-color: var(--green); transform: translateY(-3px); }
+        .service-card .icon { font-size: 2rem; }
+        .service-card h3 { font-size: 0.9rem; font-weight: 700; }
+        .service-card p { font-size: 0.75rem; color: #666; line-height: 1.4; }
+        .service-card .arrow { font-size: 0.8rem; color: var(--green); font-weight: 700; align-self: flex-end; margin-top: auto; }
+        .cat-badge { font-size: 0.7rem; background: var(--light); color: var(--green); border-radius: 10px; padding: 2px 8px; font-weight: 600; }
+        footer { background: var(--dark); color: rgba(255,255,255,0.75); text-align: center; padding: 22px; font-size: 0.85rem; margin-top: 20px; }
+        footer span { color: var(--gold); font-weight: 700; }
+        .scroll-top { position: fixed; bottom: 28px; right: 28px; background: var(--green); color: white; border: none; border-radius: 50%; width: 46px; height: 46px; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,106,78,0.35); display: none; align-items: center; justify-content: center; z-index: 200; }
+        @media (max-width: 600px) {
+            .header-top, .search-bar, .emergency-strip { padding: 10px 14px; }
+            main { padding: 18px 10px; }
+            .services-grid { grid-template-columns: 1fr 1fr; }
+            .logo-text h1 { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="logo-area">
+            <div style="font-size:2rem">🇧🇩</div>
+            <div class="logo-text">
+                <h1 id="site-title">বাংলাদেশ সেবা পোর্টাল</h1>
+            </div>
+        </div>
+        <div class="right-area">
+            <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 English</button>
+            <div class="user-area">
+                {% if user %}
+                <span>👋 {{ user.name }}</span>
+                {% if user.is_admin %}<a href="/admin" class="btn-admin">⚙️ Admin</a>{% endif %}
+                <a href="/logout" class="btn-logout" id="btn-logout">লগআউট</a>
+                {% else %}
+                <a href="/login" class="btn-login" id="btn-login">লগইন</a>
+                <a href="/register" class="btn-register" id="btn-register">রেজিস্টার</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID..." oninput="searchServices()" />
+        <button onclick="searchServices()" id="search-btn">🔍 খুঁজুন</button>
+    </div>
+</header>
+
+<div class="emergency-strip">
+    <span class="label" id="emergency-label">🆘 জরুরি নম্বর:</span>
+    {% for em in emergency %}
+    <a href="tel:{{ em.number }}" class="em-item">
+        <span data-bn="{{ em.name_bn }}" data-en="{{ em.name_en }}">{{ em.name_bn }}</span>: <strong>{{ em.number }}</strong>
+    </a>
+    {% endfor %}
+</div>
+
+<main>
+    <div id="search-results">
+        <h2 id="search-title">🔍 অনুসন্ধানের ফলাফল</h2>
+        <div class="results-grid" id="results-grid"></div>
+    </div>
+    <div id="categories-container">
+        {% for cat in categories %}
+        <div class="category-section">
+            <div class="category-title" data-bn="{{ cat.bn }}" data-en="{{ cat.en }}">{{ cat.bn }}</div>
+            <div class="services-grid">
+                {% for service in cat.items %}
+                <a href="{{ service.link }}" target="_blank" class="service-card">
+                    <div class="icon">{{ service.icon }}</div>
+                    <h3 data-bn="{{ service.name_bn }}" data-en="{{ service.name_en }}">{{ service.name_bn }}</h3>
+                    <p data-bn="{{ service.desc_bn }}" data-en="{{ service.desc_en }}">{{ service.desc_bn }}</p>
+                    <span class="arrow" data-bn="বিস্তারিত →" data-en="Details →">বিস্তারিত →</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+<footer>
+    <span id="footer-text">তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য</span>
+</footer>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<script>
+    let isEnglish = false;
+
+    function toggleLang() {
+        isEnglish = !isEnglish;
+        const t = isEnglish;
+
+        document.getElementById('site-title').textContent = t ? 'Bangladesh Service Portal' : 'বাংলাদেশ সেবা পোর্টাল';
+        document.getElementById('lang-btn').textContent = t ? '🌐 বাংলা' : '🌐 English';
+        document.getElementById('searchInput').placeholder = t ? 'Search services... eg: Passport, Train, NID...' : 'সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID...';
+        document.getElementById('search-btn').textContent = t ? '🔍 Search' : '🔍 খুঁজুন';
+        document.getElementById('emergency-label').textContent = t ? '🆘 Emergency Numbers:' : '🆘 জরুরি নম্বর:';
+        document.getElementById('search-title').textContent = t ? '🔍 Search Results' : '🔍 অনুসন্ধানের ফলাফল';
+        document.getElementById('footer-text').textContent = t ? 'Made for the people of 🇧🇩 Bangladesh' : 'তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য';
+
+        const btnLogin = document.getElementById('btn-login');
+        const btnRegister = document.getElementById('btn-register');
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogin) btnLogin.textContent = t ? 'Login' : 'লগইন';
+        if (btnRegister) btnRegister.textContent = t ? 'Register' : 'রেজিস্টার';
+        if (btnLogout) btnLogout.textContent = t ? 'Logout' : 'লগআউট';
+
+        document.querySelectorAll('[data-bn][data-en]').forEach(el => {
+            el.textContent = t ? el.getAttribute('data-en') : el.getAttribute('data-bn');
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('scrollTop').style.display = window.scrollY > 300 ? 'flex' : 'none';
+    });
+
+    async function searchServices() {
+        const q = document.getElementById('searchInput').value.trim();
+        const resultsDiv = document.getElementById('search-results');
+        const grid = document.getElementById('results-grid');
+        const categoriesDiv = document.getElementById('categories-container');
+        if (q.length < 1) {
+            resultsDiv.style.display = 'none';
+            categoriesDiv.style.display = 'block';
+            return;
+        }
+        const res = await fetch('/search?q=' + encodeURIComponent(q));
+        const data = await res.json();
+        categoriesDiv.style.display = 'none';
+        resultsDiv.style.display = 'block';
+        if (data.length === 0) {
+            grid.innerHTML = '<p style="color:#888">' + (isEnglish ? 'No results found.' : 'কোনো ফলাফল পাওয়া যায়নি।') + '</p>';
+            return;
+        }
+        grid.innerHTML = data.map(s => `
+            <a href="${s.link}" target="_blank" class="service-card">
+                <div class="icon">${s.icon}</div>
+                <h3 data-bn="${s.name_bn}" data-en="${s.name_en}">${isEnglish ? s.name_en : s.name_bn}</h3>
+                <p data-bn="${s.desc_bn}" data-en="${s.desc_en}">${isEnglish ? s.desc_en : s.desc_bn}</p>
+                <span class="cat-badge" data-bn="${s.category_bn}" data-en="${s.category_en}">${isEnglish ? s.category_en : s.category_bn}</span>
+                <span class="arrow" data-bn="বিস্তারিত →" data-en="Details →">${isEnglish ? 'Details →' : 'বিস্তারিত →'}</span>
+            </a>
+        `).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') searchServices();
+    });
+</script>
+</body>
+</html>
