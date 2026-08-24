@@ -82,7 +82,7 @@
 </header>
 
 <div class="emergency-strip">
-    <span class="label" id="emergency-label">🆘 জরুরি নম্বর:</span>
+    <span class="label" id="emergency_number">🆘 জরুরি নম্বর:</span>
     {% for em in emergency %}
     <a href="tel:{{ em.number }}" class="em-item">
         <span data-bn="{{ em.name_bn }}" data-en="{{ em.name_en }}">{{ em.name_bn }}</span>: <strong>{{ em.number }}</strong>
@@ -95,7 +95,7 @@
         <h2 id="search-title">🔍 অনুসন্ধানের ফলাফল</h2>
         <div class="results-grid" id="results-grid"></div>
     </div>
-    <div id="categories-container">
+    <div id="categories">
         {% for cat in categories %}
         <div class="category-section">
             <div class="category-title" data-bn="{{ cat.bn }}" data-en="{{ cat.en }}">{{ cat.bn }}</div>
