@@ -14,7 +14,7 @@
         .logo-area { display: flex; align-items: center; gap: 14px; }
         .logo-text h1 { font-size: 1.2rem; font-weight: 700; }
         .right-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .lang-btn { background: white; color: var(--green); border: none; border-radius: 20px; padding: 7px 16px; font-size: 0.85rem; font-family: 'Hind Siliguri', Arial, sans-serif; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+        .lang-btn { background: white; color: var(--green); border: none; border-radius: 20px; padding: 7px 16px; font-size: 0.85rem; font-family: 'Hind Siliguri', Arial, sans-serif; cursor: pointer; font-weight: 700; }
         .lang-btn:hover { background: var(--gold); color: var(--dark); }
         .user-area { display: flex; align-items: center; gap: 8px; }
         .user-area span { font-size: 0.9rem; }
@@ -85,7 +85,7 @@
     <span class="label" id="emergency-label">🆘 জরুরি নম্বর:</span>
     {% for em in emergency %}
     <a href="tel:{{ em.number }}" class="em-item">
-        <span class="em-name" data-bn="{{ em.name_bn }}" data-en="{{ em.name_en }}">{{ em.name_bn }}</span>: <strong>{{ em.number }}</strong>
+        <span data-bn="{{ em.name_bn }}" data-en="{{ em.name_en }}">{{ em.name_bn }}</span>: <strong>{{ em.number }}</strong>
     </a>
     {% endfor %}
 </div>
@@ -96,11 +96,11 @@
         <div class="results-grid" id="results-grid"></div>
     </div>
     <div id="categories-container">
-        {% for category in services %}
+        {% for cat in categories %}
         <div class="category-section">
-            <div class="category-title" data-bn="{{ category.bn }}" data-en="{{ category.en }}">{{ category.bn }}</div>
+            <div class="category-title" data-bn="{{ cat.bn }}" data-en="{{ cat.en }}">{{ cat.bn }}</div>
             <div class="services-grid">
-                {% for service in category.items %}
+                {% for service in cat.items %}
                 <a href="{{ service.link }}" target="_blank" class="service-card">
                     <div class="icon">{{ service.icon }}</div>
                     <h3 data-bn="{{ service.name_bn }}" data-en="{{ service.name_en }}">{{ service.name_bn }}</h3>
@@ -125,44 +125,25 @@
 
     function toggleLang() {
         isEnglish = !isEnglish;
+        const t = isEnglish;
 
-        // সাইট title
-        document.getElementById('site-title').textContent = isEnglish ? 'Bangladesh Service Portal' : 'বাংলাদেশ সেবা পোর্টাল';
+        document.getElementById('site-title').textContent = t ? 'Bangladesh Service Portal' : 'বাংলাদেশ সেবা পোর্টাল';
+        document.getElementById('lang-btn').textContent = t ? '🌐 বাংলা' : '🌐 English';
+        document.getElementById('searchInput').placeholder = t ? 'Search services... eg: Passport, Train, NID...' : 'সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID...';
+        document.getElementById('search-btn').textContent = t ? '🔍 Search' : '🔍 খুঁজুন';
+        document.getElementById('emergency-label').textContent = t ? '🆘 Emergency Numbers:' : '🆘 জরুরি নম্বর:';
+        document.getElementById('search-title').textContent = t ? '🔍 Search Results' : '🔍 অনুসন্ধানের ফলাফল';
+        document.getElementById('footer-text').textContent = t ? 'Made for the people of 🇧🇩 Bangladesh' : 'তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য';
 
-        // Language button
-        document.getElementById('lang-btn').textContent = isEnglish ? '🌐 বাংলা' : '🌐 English';
-
-        // Search
-        document.getElementById('searchInput').placeholder = isEnglish ? 'Search services... eg: Passport, Train, NID...' : 'সেবা খুঁজুন... যেমন: পাসপোর্ট, ট্রেন, NID...';
-        document.getElementById('search-btn').textContent = isEnglish ? '🔍 Search' : '🔍 খুঁজুন';
-
-        // Emergency
-        document.getElementById('emergency-label').textContent = isEnglish ? '🆘 Emergency Numbers:' : '🆘 জরুরি নম্বর:';
-
-        // Search results title
-        document.getElementById('search-title').textContent = isEnglish ? '🔍 Search Results' : '🔍 অনুসন্ধানের ফলাফল';
-
-        // Footer
-        document.getElementById('footer-text').textContent = isEnglish ? 'Made for the people of 🇧🇩 Bangladesh' : 'তৈরি করা হয়েছে 🇧🇩 বাংলাদেশ-এর নাগরিকদের জন্য';
-
-        // Login/Register/Logout buttons
         const btnLogin = document.getElementById('btn-login');
         const btnRegister = document.getElementById('btn-register');
         const btnLogout = document.getElementById('btn-logout');
-        if (btnLogin) btnLogin.textContent = isEnglish ? 'Login' : 'লগইন';
-        if (btnRegister) btnRegister.textContent = isEnglish ? 'Register' : 'রেজিস্টার';
-        if (btnLogout) btnLogout.textContent = isEnglish ? 'Logout' : 'লগআউট';
+        if (btnLogin) btnLogin.textContent = t ? 'Login' : 'লগইন';
+        if (btnRegister) btnRegister.textContent = t ? 'Register' : 'রেজিস্টার';
+        if (btnLogout) btnLogout.textContent = t ? 'Logout' : 'লগআউট';
 
-        // Emergency names
-        document.querySelectorAll('.em-name').forEach(el => {
-            el.textContent = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-bn');
-        });
-
-        // সব data-bn/data-en elements
         document.querySelectorAll('[data-bn][data-en]').forEach(el => {
-            if (!el.classList.contains('em-name')) {
-                el.textContent = isEnglish ? el.getAttribute('data-en') : el.getAttribute('data-bn');
-            }
+            el.textContent = t ? el.getAttribute('data-en') : el.getAttribute('data-bn');
         });
     }
 
@@ -175,23 +156,19 @@
         const resultsDiv = document.getElementById('search-results');
         const grid = document.getElementById('results-grid');
         const categoriesDiv = document.getElementById('categories-container');
-
         if (q.length < 1) {
             resultsDiv.style.display = 'none';
             categoriesDiv.style.display = 'block';
             return;
         }
-
         const res = await fetch('/search?q=' + encodeURIComponent(q));
         const data = await res.json();
         categoriesDiv.style.display = 'none';
         resultsDiv.style.display = 'block';
-
         if (data.length === 0) {
             grid.innerHTML = '<p style="color:#888">' + (isEnglish ? 'No results found.' : 'কোনো ফলাফল পাওয়া যায়নি।') + '</p>';
             return;
         }
-
         grid.innerHTML = data.map(s => `
             <a href="${s.link}" target="_blank" class="service-card">
                 <div class="icon">${s.icon}</div>
